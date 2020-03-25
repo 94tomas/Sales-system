@@ -42,8 +42,8 @@
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-shopping-cart"></i>
-                        <p>Ventas</p>
+                        <i class="nav-icon fas fa-newspaper"></i>
+                        <p>Facturas</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -58,50 +58,67 @@
                         <p>Clientes</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- link admin --}}
+                @if (Auth::user()->hasRole('admin'))
+                {{-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-users-cog"></i>
                         <p>Proveedores</p>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-bar"></i>
-                        <p>Reporte de ventas</p>
-                    </a>
-                </li>
-                {{-- link admin --}}
-                @if (Auth::user()->hasRole('admin'))
+                </li> --}}
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user-tie"></i>
+                        <i class="nav-icon fas fa-chart-bar"></i>
                         <p>
-                        Administrador
-                        <i class="right fas fa-angle-left"></i>
+                            Reportes
+                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Dashboard v1</p>
-                        </a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-dot-circle"></i>
+                                <p>Facturas anteriores</p>
+                            </a>
                         </li>
                         <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Dashboard v2</p>
-                        </a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-dot-circle"></i>
+                                <p>Reporte para contabilidad</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Gerente
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-dot-circle"></i>
+                                <p>Códigos factorización</p>
+                            </a>
                         </li>
                         <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Dashboard v3</p>
-                        </a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon far fa-dot-circle"></i>
+                                <p>Información</p>
+                            </a>
                         </li>
                     </ul>
                 </li>
                 @endif
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>Mi cuenta</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -15,14 +15,14 @@
 
         <!-- Container box -->
         <b-container>
-            <b-row>
+            <b-row align-h="center">
                 <b-col md="4" sm="6">
                     <a href="#">
                         <div class="info-box bg-info align-items-center">
-                            <span class="info-box-icon"><i class="fas fa-shopping-cart"></i></span>
+                            <span class="info-box-icon"><i class="fas fa-newspaper"></i></span>
                 
                             <div class="info-box-content">
-                                <span class="info-box-text">Ventas</span>
+                                <span class="info-box-text">Facturas</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -55,7 +55,9 @@
                     </a>
                 </b-col>
                 <!-- /.col -->
-                <b-col md="4" sm="6">
+                {{-- link admin --}}
+                @if (Auth::user()->hasRole('admin'))
+                {{-- <b-col md="4" sm="6">
                     <a href="#">
                         <div class="info-box bg-teal align-items-center">
                             <span class="info-box-icon"><i class="fas fa-users-cog"></i></span>
@@ -66,7 +68,7 @@
                             <!-- /.info-box-content -->
                         </div>
                     </a>
-                </b-col>
+                </b-col> --}}
                 <!-- /.col -->
                 <b-col md="4" sm="6">
                     <a href="#">
@@ -74,7 +76,34 @@
                             <span class="info-box-icon"><i class="fas fa-chart-bar"></i></span>
                 
                             <div class="info-box-content">
-                                <span class="info-box-text">Reporte de ventas</span>
+                                <span class="info-box-text">Reportes</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                    </a>
+                </b-col>
+                <!-- /.col -->
+                <b-col md="4" sm="6">
+                    <a href="#">
+                        <div class="info-box bg-warning align-items-center">
+                            <span class="info-box-icon"><i class="fas fa-user-tie"></i></span>
+                
+                            <div class="info-box-content">
+                                <span class="info-box-text">Gerente</span>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                    </a>
+                </b-col>
+                <!-- /.col -->
+                @endif
+                <b-col md="4" sm="6">
+                    <a href="#">
+                        <div class="info-box bg-teal align-items-center">
+                            <span class="info-box-icon"><i class="fas fa-cogs"></i></span>
+                
+                            <div class="info-box-content">
+                                <span class="info-box-text">Mi cuenta</span>
                             </div>
                             <!-- /.info-box-content -->
                         </div>
@@ -105,8 +134,6 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-
 
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">

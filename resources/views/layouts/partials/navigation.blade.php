@@ -44,7 +44,7 @@
                 <!-- Menu Footer-->
                 <li class="user-footer d-flex">
                     <div class="col-6">
-                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                        {{-- <a href="#" class="btn btn-default btn-flat">Profile</a> --}}
                     </div>
                     <div class="col-6 text-right">
                         <a href="{{ route('logout') }}" class="btn btn-default btn-flat"
