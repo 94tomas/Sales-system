@@ -23,17 +23,18 @@ import BootstrapVue from 'bootstrap-vue' //Importing
 Vue.use(BootstrapVue)
 
 
-// const files = require.context('./', true, /\.vue$/i);
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('app', require('./components/AppComponent.vue').default);
+Vue.component('c-navigation', require('./partials/MainNav.vue').default);
+Vue.component('c-sidebar', require('./partials/MainSidebar.vue').default);
+Vue.component('c-footer', require('./partials/MainFooter.vue').default);
+/* Vue.component('dashboard', require('./views/Dashboard.vue').default);
+Vue.component('invoice', require('./views/Invoice.vue').default);
+Vue.component('product', require('./views/Product.vue').default); */
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+import router from './routes'
 
 const app = new Vue({
     el: '#app',
+    router
 });

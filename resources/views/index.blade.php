@@ -19,23 +19,31 @@
     <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body class="hold-transition login-page">
-    <div id="app2">
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+<body class="sidebar-mini">
+    <main id="app">
+        
+        @php
+            // $user = ['id'=>1, 'name'=>'test'];
+            $user = Auth::user();
+            $userRole = Auth::user()->roles[0]->name;
+        @endphp
+        <app 
+            :userdata="{{ json_encode($user) }}"
+            :userrole="{{ json_encode($userRole) }}"
+            >
+        </app>
+
+    </main>
 
     <!-- jQuery -->
     <script src="../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js"></script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
