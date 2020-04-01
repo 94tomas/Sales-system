@@ -92020,6 +92020,20 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
       return __webpack_require__.e(/*! import() | about */ "about").then(__webpack_require__.bind(null, /*! ./views/MyAccount.vue */ "./resources/js/views/MyAccount.vue"));
     },
     props: true
+  }, {
+    path: '/dashboard/create-product',
+    name: 'addProduct',
+    component: function component() {
+      return __webpack_require__.e(/*! import() | about */ "about").then(__webpack_require__.bind(null, /*! ./views/viewsSingle/CreateProduct.vue */ "./resources/js/views/viewsSingle/CreateProduct.vue"));
+    },
+    props: true
+  }, {
+    path: '/dashboard/edit-product',
+    name: 'editProduct',
+    component: function component() {
+      return __webpack_require__.e(/*! import() | about */ "about").then(__webpack_require__.bind(null, /*! ./views/viewsSingle/EditProduct.vue */ "./resources/js/views/viewsSingle/EditProduct.vue"));
+    },
+    props: true
   }
   /* {
       path: '*',

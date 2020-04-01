@@ -37,10 +37,18 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::get('products', function () {
         return view('index');
     });
+    // Route::get('products', 'ProductController@index');
     Route::get('clients', function () {
         return view('index');
     });
     Route::get('account', function () {
         return view('index');
     });
+    Route::get('create-product', function () {
+        return view('index');
+    });
+    Route::get('edit-product', function () {
+        return view('index');
+    });
+    // Route::post('add-product', 'ProductController@store');
 });

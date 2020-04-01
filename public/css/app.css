@@ -10886,3 +10886,12 @@ body {
   overflow-x: hidden;
 }
 
+.c-alert {
+  position: fixed;
+  top: 15px;
+  right: 10px;
+  z-index: 99999;
+  box-shadow: 0 0 10px 0px #1d643b;
+  opacity: 0.8;
+}
+

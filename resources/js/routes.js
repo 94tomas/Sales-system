@@ -34,6 +34,18 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/MyAccount.vue'),
             props: true
         },
+        {
+            path: '/dashboard/create-product',
+            name: 'addProduct',
+            component: () => import(/* webpackChunkName: "about" */ './views/viewsSingle/CreateProduct.vue'),
+            props: true
+        },
+        {
+            path: '/dashboard/edit-product',
+            name: 'editProduct',
+            component: () => import(/* webpackChunkName: "about" */ './views/viewsSingle/EditProduct.vue'),
+            props: true
+        },
         /* {
             path: '*',
             component: require('./views/404')

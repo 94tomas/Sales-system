@@ -17,8 +17,8 @@ class CreateProductsTable extends Migration
             $table->increments('id');
             $table->string('name', 30);
             $table->string('description', 50)->nullable();
-            $table->integer('initial_stock');
-            $table->integer('current_stock');
+            $table->integer('stock')->nullable();
+            // $table->integer('current_stock')->nullable();
             $table->double('sale_price', 20, 2);
 
             /* $table->integer('provider_id')->unsigned();
