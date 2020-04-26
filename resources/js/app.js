@@ -22,7 +22,10 @@ import BootstrapVue from 'bootstrap-vue' //Importing
 
 Vue.use(BootstrapVue)
 
-
+// Vue select
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
+import 'vue-select/dist/vue-select.css';
 
 Vue.component('app', require('./components/AppComponent.vue').default);
 Vue.component('c-navigation', require('./partials/MainNav.vue').default);

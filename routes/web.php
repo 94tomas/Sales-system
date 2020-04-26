@@ -50,5 +50,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::get('edit-product', function () {
         return view('index');
     });
+    Route::get('create-client', function () {
+        return view('index');
+    });
+    Route::get('edit-client', function () {
+        return view('index');
+    });
     // Route::post('add-product', 'ProductController@store');
 });

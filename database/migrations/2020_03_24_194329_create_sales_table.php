@@ -16,10 +16,12 @@ class CreateSalesTable extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->increments('id');
             $table->date('date_sale');
-            $table->integer('number');
-            $table->boolean('statu');
-
+            $table->string('number');
             $table->integer('client_id')->unsigned();
+            $table->integer('total_price');
+            $table->integer('discount')->nullable()->default(0);
+            $table->boolean('status')->default(true);
+
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');     
 
             $table->timestamps();

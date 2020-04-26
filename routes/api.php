@@ -22,3 +22,14 @@ Route::get('/dbproducts', 'ProductController@index'); */
 Route::resource('/dbproducts', 'ProductController', ['only' => [
     'index', 'store', 'show', 'edit', 'update', 'destroy'
 ]]);
+
+Route::resource('/dbclients', 'ClientController', ['only' => [
+    'index', 'store', 'show', 'edit', 'update', 'destroy'
+]]);
+
+Route::get('/dbclient_invoice/{nit_ci}', 'InvoiceController@getClientByci');
+Route::get('/dbproduct_invoice/{prod}', 'InvoiceController@getProductByprod');
+
+Route::resource('dbinvoices', 'InvoiceController', ['only' => [
+    'index', 'store', 'show', 'edit', 'update', 'destroy'
+]]);

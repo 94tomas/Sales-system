@@ -17,7 +17,7 @@ class CreateClientsTable extends Migration
             $table->increments('id');
             $table->string('nit_ci', 20)->unique();
             $table->string('name', 50);
-            $table->string('last_name', 50);
+            // $table->string('last_name', 50);
             $table->timestamps();
         });
     }

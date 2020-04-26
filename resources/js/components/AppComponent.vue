@@ -2,7 +2,7 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="wrapper">
         
-        <c-navigation :username="userdata"></c-navigation>
+        <c-navigation :username="userdata" :userrole="userrole"></c-navigation>
 
         <c-sidebar :user_data="userdata" :user_role="userrole"></c-sidebar>
 

@@ -1,5 +1,15 @@
 <template>
     <div>
+        <b-alert
+            variant="success"
+            class="c-alert"
+            dismissible
+            fade
+            :show="5"
+            v-if="$route.params.status"
+            >
+            <strong>{{$route.params.msg}}</strong>
+        </b-alert>
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <b-container>
@@ -8,10 +18,12 @@
                         <h3><i class="fas fa-users"></i> Clientes</h3>
                     </b-col>
                     <b-col class="text-right">
-                        <b-button variant="success" size="lg">
+                        <router-link :to="{name: 'addClient'}" 
+                            tag="button"
+                            class="btn btn-success btn-lg">
                             <i class="fas fa-plus"></i> 
                             Añadir
-                        </b-button>
+                        </router-link>
                     </b-col>
                 </b-row>
             </b-container>
@@ -22,79 +34,70 @@
             <b-container fluid>
                 <!-- User Interface controls -->
                 <b-row class="mb-3">
-                    <b-col lg="8" class="my-1">
+                    <b-col class="my-1">
                         <b-form-group class="mb-0">
                             <b-input-group size="sm">
                                 <b-form-input
-                                    v-model="filter"
                                     type="search"
                                     id="filterInput"
                                     placeholder="Buscar cliente"
+                                    v-model="clientSearch"
+                                    @keyup="filter"
                                     >
                                 </b-form-input>
-                                <b-input-group-append>
-                                    <b-button :disabled="!filter" @click="filter = ''">Borrar</b-button>
-                                </b-input-group-append>
                             </b-input-group>
-                        </b-form-group>
-                    </b-col>
-
-                    <b-col lg="4" class="my-1">
-                        <b-form-group class="mb-0 c-flex">
-                            <span class="mr-2">Mostrar</span>
-                            <b-form-select
-                                v-model="perPage"
-                                id="perPageSelect"
-                                size="sm"
-                                :options="pageOptions"
-                            ></b-form-select>
-                            <span class="ml-2">Entradas</span>
                         </b-form-group>
                     </b-col>
                 </b-row>
 
                 <!-- Main table element -->
-                <b-table
-                    show-empty
+                <b-table-simple
                     small
                     hover
                     bordered
                     head-variant="dark"
                     no-border-collapse
                     responsive="md"
-                    :items="items"
-                    :fields="fields"
-                    :current-page="currentPage"
-                    :per-page="perPage"
-                    :filter="filter"
-                    :filterIncludedFields="filterOn"
-                    :sort-by.sync="sortBy"
-                    :sort-desc.sync="sortDesc"
-                    :sort-direction="sortDirection"
-                    @filtered="onFiltered"
-                    :busy="false"
                     >
-                    <template v-slot:table-busy>
-                        <div class="text-center text-danger my-2">
-                            <b-spinner class="align-middle"></b-spinner>
-                            <strong>Loading...</strong>
-                        </div>
-                    </template>
-
-                    <template v-slot:cell(id)="row">
-                        {{ row.index + 1 }}
-                    </template>
-
-                    <template v-slot:cell(actions)="">
-                        <a href="javascript:;" class="text-success py-0 px-1"
-                            title="Editar">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                    </template>
-                </b-table>
+                    <b-thead head-variant="dark">
+                        <b-tr>
+                            <b-th>Nº</b-th>
+                            <b-th>Nombre</b-th>
+                            <b-th>NIT / CI</b-th>
+                            <b-th></b-th>
+                        </b-tr>
+                    </b-thead>
+                    <b-tbody id="items_panel">
+                        <b-tr class="items_colums"
+                            v-for="(item, index) in items" :key="index">
+                            <b-td>
+                                {{index+1}}
+                            </b-td>
+                            <b-td>
+                                {{item.name}}
+                            </b-td>
+                            <b-td>
+                                {{item.nit_ci}}
+                            </b-td>
+                            <b-td class="text-right">
+                                <router-link :to="{name: 'editClient', params: {client_id: item.id}}"
+                                    title="Editar"
+                                    class="text-success py-0 px-1">
+                                    <i class="fas fa-edit"></i>
+                                </router-link>
+                            </b-td>
+                        </b-tr>
+                    </b-tbody>
+                </b-table-simple>
+                <div v-if="statusload">
+                    <div class="text-center text-danger my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong>Cargando...</strong>
+                    </div>
+                </div>
 
                 <!-- Pagination -->
-                <div class="pb-4">
+               <!--  <div class="pb-4">
                     <b-pagination
                     v-model="currentPage"
                     :total-rows="totalRows"
@@ -103,7 +106,7 @@
                     size="sm"
                     class="my-0"
                     ></b-pagination>
-                </div>
+                </div> -->
             </b-container>
         </section>
         <!-- /.content -->
@@ -114,40 +117,9 @@ export default {
     name: 'clients',
     data() {
         return {
-            items: [
-                { name: 'Dickerson Macdonald', ci_nit: 40 },
-                { name: 'Larsen Shaw', ci_nit: 21 },
-                { name: 'Mini Navarro', ci_nit: 9, },
-                { name: 'Geneva Wilson', ci_nit: 89 },
-                { name: 'Jami Carney', ci_nit: 38 },
-                { name: 'Essie Dunlap', ci_nit: 27 },
-                { name: 'Thor Macdonald', ci_nit: 40 },
-                { name: 'Larsen Shaw', ci_nit: 87 },
-                { name: 'Mitzi Navarro', ci_nit: 26 },
-                { name: 'Genevieve Wilson', ci_nit: 22 },
-                { name: 'John Carney', ci_nit: 38 },
-                { name: 'Dick Dunlap', ci_nit: 29 }
-            ],
-            fields: [
-                { key: 'id', label: 'N°' },
-                { key: 'name', label: 'Nombre/s', sortable: true, sortDirection: 'desc' },
-                { key: 'ci_nit', label: 'CI / NIT', sortable: true, class: 'text-center' },
-                { key: 'actions', label: '', class: 'text-right' }
-            ],
-            totalRows: 1,
-            currentPage: 1,
-            perPage: 10,
-            pageOptions: [10, 25, 50, 100],
-            sortBy: '',
-            sortDesc: false,
-            sortDirection: 'asc',
-            filter: null,
-            filterOn: [],
-            infoModal: {
-                id: 'info-modal',
-                title: '',
-                content: ''
-            }
+            items: {},
+            statusload: false,
+            clientSearch: '',
         }
     },
     computed: {
@@ -161,14 +133,28 @@ export default {
         }
     },
     mounted() {
-        // Set the initial number of items
-        this.totalRows = this.items.length
+        this.getClients();
     },
     methods: {
-        onFiltered(filteredItems) {
-            // Trigger pagination to update the number of buttons/pages due to filtering
-            this.totalRows = filteredItems.length
-            this.currentPage = 1
+        getClients() {
+            this.statusload = true;
+            axios.get('/api/dbclients').then(response => {
+                this.items = response.data;
+                // console.log(response.data);
+                this.statusload = false;
+            }).catch(error => {
+                alert('error');
+            });
+        },
+        filter(event) {
+            this.statusload = true;
+            this.items = {};
+            axios.get('/api/dbclients/'+this.clientSearch).then(response => {
+                this.items = response.data;
+                this.statusload = false;
+            }).catch(error => {
+                alert('error');
+            });
         }
     }
 }

@@ -29,7 +29,7 @@
                             <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                             <p>
-                                {{ username.name }} - Administration
+                                {{ username.name }} - <span v-if="userrole == 'admin'">Administrador</span><span v-else>Vendedor</span>
                             </p>
                         </li>
                         <!-- Menu Footer-->
@@ -74,6 +74,6 @@ export default {
             this.timestamp = dateTime;
         }
     },
-    props: ['username']
+    props: ['username', 'userrole']
 }
 </script>

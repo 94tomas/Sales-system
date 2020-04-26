@@ -46,6 +46,18 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ './views/viewsSingle/EditProduct.vue'),
             props: true
         },
+        {
+            path: '/dashboard/create-client',
+            name: 'addClient',
+            component: () => import(/* webpackChunkName: "about" */ './views/viewsSingle/CreateClient.vue'),
+            props: true
+        },
+        {
+            path: '/dashboard/edit-client',
+            name: 'editClient',
+            component: () => import(/* webpackChunkName: "about" */ './views/viewsSingle/EditClient.vue'),
+            props: true
+        },
         /* {
             path: '*',
             component: require('./views/404')
