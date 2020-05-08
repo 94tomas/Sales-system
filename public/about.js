@@ -133,17 +133,14 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    sortOptions: function sortOptions() {
-      // Create an options list from our fields
-      return this.fields.filter(function (f) {
-        return f.sortable;
-      }).map(function (f) {
-        return {
-          text: f.label,
-          value: f.key
-        };
-      });
-    }
+    /* sortOptions() {
+        // Create an options list from our fields
+        return this.fields
+        .filter(f => f.sortable)
+        .map(f => {
+            return { text: f.label, value: f.key }
+        })
+    } */
   },
   mounted: function mounted() {
     this.getClients();
@@ -521,13 +518,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'invoice',
   data: function data() {
     return {
       formsales: {
         numInvoice: '000001221',
-        date: new Date().toJSON().slice(0, 10),
+        // date: new Date().toJSON().slice(0,10),
+        date: this.dateNow(),
         name: '',
         nit_ci: '',
         ifNewClient: false,
@@ -550,10 +553,27 @@ __webpack_require__.r(__webpack_exports__);
         status: '',
         show: false,
         msg: ''
-      }
+      },
+      refresh: true
     };
   },
   methods: {
+    dateNow: function dateNow() {
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+
+      if (dd < 10) {
+        dd = '0' + dd;
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm;
+      }
+
+      return yyyy + '-' + mm + '-' + dd;
+    },
     getName: function getName() {
       var _this = this;
 
@@ -578,6 +598,7 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         name: '',
         sale: 0,
+        stock: 0,
         disabled: false,
         quantity: 1
       });
@@ -627,16 +648,29 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     /* User choose product */
-    chooseProd: function chooseProd(j, id, name, sale) {
+    chooseProd: function chooseProd(j, id, name, stock, sale) {
       this.items[j].id = id;
       this.items[j].name = name;
       this.items[j].sale = sale;
+      this.items[j].stock = stock;
       this.items[j].disabled = true;
       this.totalPrice();
     },
 
     /* user change quantity of product */
     changeQuantity: function changeQuantity(quantity, i) {
+      if (quantity == this.items[i].stock) {
+        // notification
+        this.notification.status = 'warning';
+        this.notification.show = true;
+        this.notification.msg = 'Stock máximo alcanzado del producto: ' + this.items[i].name;
+      } else {
+        // notification
+        this.notification.status = '';
+        this.notification.show = false;
+        this.notification.msg = '';
+      }
+
       this.items[i].quantity = quantity;
       this.totalPrice();
     },
@@ -678,8 +712,7 @@ __webpack_require__.r(__webpack_exports__);
           from: this.formsales,
           products: this.items
         }).then(function (response) {
-          console.log(response.status);
-
+          // console.log(response.status);
           if (response.status === 200) {
             _this4.formsales = {
               numInvoice: '000001221',
@@ -687,12 +720,10 @@ __webpack_require__.r(__webpack_exports__);
               name: '',
               nit_ci: '',
               ifNewClient: false,
-              // product: '',
               discount: '',
               total: 0
             };
-            _this4.items = [];
-            /* notification */
+            _this4.items = []; // notification
 
             _this4.notification.status = 'success';
             _this4.notification.show = true;
@@ -700,21 +731,33 @@ __webpack_require__.r(__webpack_exports__);
           }
         })["catch"](function (error) {
           if (error.response.status === 422) {
-            _this4.errors = error.response.data.errors || {};
-            /* notification */
+            _this4.errors = error.response.data.errors || {}; // notification
 
             _this4.notification.status = 'danger';
             _this4.notification.show = true;
             _this4.notification.msg = 'Verificar los datos';
           }
         });
-      }
-      /* notification */
+      } // notification
 
 
       this.notification.status = '';
       this.notification.show = false;
-      this.notification.msg = '';
+      this.notification.msg = ''; // Refresh invoices list
+
+      this.forceRerender();
+    },
+
+    /* Refresh invoices list */
+    forceRerender: function forceRerender() {
+      var _this5 = this;
+
+      // Remove my-component from the DOM
+      this.refresh = false;
+      this.$nextTick(function () {
+        // Add the component back in
+        _this5.refresh = true;
+      });
     }
   }
 });
@@ -1607,7 +1650,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".c-flex > div {\n  display: flex;\n  align-items: center;\n}\n.modal-backdrop {\n  background-color: rgba(0, 0, 0, 0.5);\n}", ""]);
+exports.push([module.i, ".c-flex > div {\n  display: flex;\n  align-items: center;\n}", ""]);
 
 // exports
 
@@ -2274,7 +2317,6 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "c-body",
       on: {
         click: function($event) {
           return _vm.customBody()
@@ -2344,16 +2386,7 @@ var render = function() {
                   _c("b-form-group", [
                     _vm._v("\n                        Fecha: "),
                     _c("span", { staticClass: "text-info" }, [
-                      _vm._v(
-                        " " +
-                          _vm._s(
-                            new Date()
-                              .toJSON()
-                              .slice(0, 10)
-                              .replace(/-/g, "/")
-                          ) +
-                          " "
-                      )
+                      _vm._v(" " + _vm._s(_vm.formsales.date) + " ")
                     ])
                   ]),
                   _vm._v(" "),
@@ -2575,6 +2608,7 @@ var render = function() {
                                               id: "item_quantity_" + index,
                                               type: "number",
                                               min: "1",
+                                              max: item.stock,
                                               value: item.quantity,
                                               required: "",
                                               size: "sm"
@@ -2808,6 +2842,7 @@ var render = function() {
                         _vm.products.i,
                         product.id,
                         product.name,
+                        product.stock,
                         product.sale_price
                       )
                     }
@@ -2818,7 +2853,9 @@ var render = function() {
             }),
             0
           )
-        : _vm._e()
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.refresh ? _c("list-invoices") : _vm._e()
     ],
     1
   )
@@ -3091,7 +3128,9 @@ var render = function() {
                           _c("b-td", [
                             _vm._v(
                               "\n                            " +
-                                _vm._s(item.sale_price) +
+                                _vm._s(
+                                  _vm._f("numFormat")(item.sale_price, "0.00")
+                                ) +
                                 "\n                        "
                             )
                           ]),

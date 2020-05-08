@@ -28,3 +28,17 @@ body {
         }
     }
 }
+/* Custom pagination */
+.c-pagination {
+    .page-item.active .page-link {
+        background-color: #4d6175;
+        border-color: #4d6175;
+    }
+    .page-link {
+        color: #4d6175;
+    }
+}
+/* Modal fade */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}

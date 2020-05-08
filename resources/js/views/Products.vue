@@ -93,7 +93,7 @@
                                 {{item.name}}
                             </b-td>
                             <b-td>
-                                {{item.sale_price}}
+                                {{item.sale_price | numFormat('0.00') }}
                             </b-td>
                             <b-td>
                                 {{item.stock}}
@@ -224,8 +224,5 @@
             display: flex;
             align-items: center;
         }
-    }
-    .modal-backdrop {
-        background-color: rgba(0, 0, 0, 0.5);
     }
 </style>

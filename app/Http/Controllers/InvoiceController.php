@@ -14,9 +14,26 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // 
+        $number = trim($request->get('number'));
+        $client = trim($request->get('client'));
+
+        if (!empty($number) || !empty($client)) {
+            $allInvoices = Sale::with('clients') 
+                    ->orWhere('number', 'like', '%'.$number.'%')
+                    ->whereHas('clients', function($x) use ($client) {
+                        $x->where('name', 'like', '%'.$client.'%');
+                    })
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+        } else {
+            $allInvoices = Sale::with('clients')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate(10);
+        }
+                 
+        return response()->json($allInvoices);
     }
 
     /**
@@ -62,7 +79,7 @@ class InvoiceController extends Controller
         $sale->number = $request->from['numInvoice'];
         $sale->client_id = $client->id;
         $sale->total_price = $request->from['total'];
-        $sale->discount = $request->from['discount'];
+        $sale->discount = ($request->from['discount']) ? $request->from['discount'] : 0;
         $sale->save();
 
         /* Save list products */
@@ -73,6 +90,11 @@ class InvoiceController extends Controller
                     'sale_id' => $sale->id,
                     'product_id' => $product['id']
                 ]);
+            /* Update product stock */
+            $prod = Product::find($product['id']);
+            $currentStock = $prod->stock;
+            $prod->stock = $currentStock - $product['quantity'];
+            $prod->save();
         }
 
 
@@ -89,7 +111,11 @@ class InvoiceController extends Controller
      */
     public function show($id)
     {
-        // 
+        $sale = Sale::where('id', $id)
+                ->with('clients')
+                ->with('saleDetails')
+                ->get();
+        return response()->json($sale);
     }
 
     /**
@@ -136,8 +162,9 @@ class InvoiceController extends Controller
     }
 
     function getProductByprod($prod) {
-        $listProd = Product::select('id', 'name', 'sale_price')
+        $listProd = Product::select('id', 'name', 'stock', 'sale_price')
                     ->where('name', 'like', '%'.$prod.'%')
+                    ->where('stock', '>', 0)
                     ->get();
         return response()->json($listProd);
     }

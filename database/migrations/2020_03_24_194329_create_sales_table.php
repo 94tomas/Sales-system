@@ -18,8 +18,10 @@ class CreateSalesTable extends Migration
             $table->date('date_sale');
             $table->string('number');
             $table->integer('client_id')->unsigned();
-            $table->integer('total_price');
-            $table->integer('discount')->nullable()->default(0);
+            // $table->integer('total_price');
+            $table->double('total_price', 20, 2);
+            // $table->integer('discount')->nullable()->default(0);
+            $table->double('discount', 20, 2)->nullable()->default(0);
             $table->boolean('status')->default(true);
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');     

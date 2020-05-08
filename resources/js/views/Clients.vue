@@ -123,14 +123,14 @@ export default {
         }
     },
     computed: {
-        sortOptions() {
+        /* sortOptions() {
             // Create an options list from our fields
             return this.fields
             .filter(f => f.sortable)
             .map(f => {
                 return { text: f.label, value: f.key }
             })
-        }
+        } */
     },
     mounted() {
         this.getClients();

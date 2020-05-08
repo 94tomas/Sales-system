@@ -1,5 +1,5 @@
 <template>
-    <div class="c-body" @click="customBody()">
+    <div @click="customBody()">
         <b-alert
             :variant="notification.status"
             class="c-alert"
@@ -35,7 +35,8 @@
                             Número: <span class="text-info"> {{ formsales.numInvoice }} </span>
                         </b-form-group>
                         <b-form-group>
-                            Fecha: <span class="text-info"> {{ new Date().toJSON().slice(0,10).replace(/-/g,'/') }} </span>
+                            <!-- new Date().toJSON().slice(0,10).replace(/-/g,'/') -->
+                            Fecha: <span class="text-info"> {{ formsales.date }} </span>
                         </b-form-group>
                         <b-form-group
                             id="input-group-1"
@@ -110,6 +111,7 @@
                                                 <b-form-input :id="'item_quantity_'+index"
                                                         type="number"
                                                         min="1"
+                                                        :max="item.stock"
                                                         :value="item.quantity"
                                                         @change="changeQuantity($event, index)"
                                                         required
@@ -184,10 +186,13 @@
         <ul id="my_list_prod" class="list-float" :style="styleList" v-if="ifVisibility">
             <li v-for="product in products" 
                 :key="product.id" 
-                @click="chooseProd(products.i, product.id, product.name, product.sale_price)">
+                @click="chooseProd(products.i, product.id, product.name, product.stock, product.sale_price)">
                 {{ product.name }}
             </li>
         </ul>
+
+        <!-- Show invoices list and action of invoices -->
+        <list-invoices v-if="refresh"></list-invoices>
     </div>
 </template>
 <script>
@@ -197,7 +202,8 @@ export default {
         return {
             formsales: {
                 numInvoice: '000001221',
-                date: new Date().toJSON().slice(0,10),
+                // date: new Date().toJSON().slice(0,10),
+                date: this.dateNow(),
                 name: '',
                 nit_ci: '',
                 ifNewClient: false,
@@ -220,10 +226,25 @@ export default {
                 status: '',
                 show: false,
                 msg: ''
-            }
+            },
+            refresh: true
         }
     },
     methods: {
+        dateNow() {
+            var today = new Date();
+            var dd = today.getDate();
+
+            var mm = today.getMonth()+1; 
+            var yyyy = today.getFullYear();
+            if(dd<10) {
+                dd='0'+dd;
+            } 
+            if(mm<10) {
+                mm='0'+mm;
+            } 
+            return yyyy+'-'+mm+'-'+dd;
+        },
         getName() {
             this.formsales.ifNewClient = false;
             if(this.formsales.nit_ci != '') {
@@ -241,7 +262,7 @@ export default {
         },
         /* Add product on invoice */
         addProduct() {
-            this.items.push({id: '', name: '', sale: 0, disabled: false, quantity: 1});
+            this.items.push({id: '', name: '', sale: 0, stock: 0, disabled: false, quantity: 1});
             this.totalPrice();
             this.ifProducts = false;
             // this.items[this.i] = {id: '', name: '', sale: ''};
@@ -285,17 +306,30 @@ export default {
             this.products = [];
         },
         /* User choose product */
-        chooseProd (j, id, name, sale) {
+        chooseProd (j, id, name, stock, sale) {
             this.items[j].id = id;
             this.items[j].name = name;
             this.items[j].sale = sale;
+            this.items[j].stock = stock;
             this.items[j].disabled = true;
             this.totalPrice();
         },
         /* user change quantity of product */
         changeQuantity (quantity, i) {
+            if (quantity == this.items[i].stock) {
+                // notification
+                this.notification.status = 'warning';
+                this.notification.show = true;
+                this.notification.msg = 'Stock máximo alcanzado del producto: ' + this.items[i].name;
+            }
+            else {    
+                // notification
+                this.notification.status = '';
+                this.notification.show = false;
+                this.notification.msg = '';
+            }
             this.items[i].quantity = quantity;
-            this.totalPrice();
+            this.totalPrice(); 
         },
         /* Calculate total */
         totalPrice() {
@@ -325,7 +359,7 @@ export default {
                 this.ifProducts = false;
                 // [this.formsales, this.items]
                 axios.post('/api/dbinvoices', {from: this.formsales, products: this.items}).then(response => {
-                    console.log(response.status);
+                    // console.log(response.status);
                     if (response.status === 200) {
                         this.formsales = {
                             numInvoice: '000001221',
@@ -333,12 +367,11 @@ export default {
                             name: '',
                             nit_ci: '',
                             ifNewClient: false,
-                            // product: '',
                             discount: '',
                             total: 0,
                         };
                         this.items = [];
-                        /* notification */
+                        // notification
                         this.notification.status = 'success';
                         this.notification.show = true;
                         this.notification.msg = 'Venta realizada con éxito';
@@ -346,17 +379,29 @@ export default {
                 }).catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors || {};
-                        /* notification */
+                        // notification
                         this.notification.status = 'danger';
                         this.notification.show = true;
                         this.notification.msg = 'Verificar los datos';
                     }
                 });
             }
-            /* notification */
+            // notification
             this.notification.status = '';
             this.notification.show = false;
             this.notification.msg = '';
+            // Refresh invoices list
+            this.forceRerender();
+        },
+        /* Refresh invoices list */
+        forceRerender() {
+            // Remove my-component from the DOM
+            this.refresh = false;
+            
+            this.$nextTick(() => {
+                // Add the component back in
+                this.refresh = true;
+            });
         }
     }
 }
